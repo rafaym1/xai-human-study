@@ -72,9 +72,24 @@
         <li>After each prediction, you will be asked which feature you think was most important</li>
       </ul>
       <p><strong>There are no right or wrong answers</strong> — we are interested in how you reason with the information provided. Please answer honestly and don't overthink each question.</p>
-      <p style="margin-top:16px;color:#888;font-size:0.85rem;">Your responses are anonymous. Data is used for academic research only.</p>
+      <div style="margin-top:20px;border-top:1px solid #eee;padding-top:20px;">
+        <p style="margin-bottom:14px;color:#444;">Please enter your details before starting. This is only used to track participation — it will not be shared.</p>
+        <div style="margin-bottom:12px;">
+          <label style="display:block;font-weight:bold;margin-bottom:6px;">Full Name</label>
+          <input type="text" id="participant-name" placeholder="e.g. Ahmed Khan"
+            style="width:100%;padding:10px 14px;border:2px solid #e0e0e0;border-radius:8px;font-size:0.95rem;">
+          <p class="error-msg" id="err-name">Please enter your name.</p>
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="display:block;font-weight:bold;margin-bottom:6px;">Work Email</label>
+          <input type="email" id="participant-email" placeholder="e.g. ahmed@company.com"
+            style="width:100%;padding:10px 14px;border:2px solid #e0e0e0;border-radius:8px;font-size:0.95rem;">
+          <p class="error-msg" id="err-email">Please enter a valid email.</p>
+        </div>
+      </div>
+      <p style="margin-top:12px;color:#888;font-size:0.85rem;">Your responses are used for academic research only.</p>
       <div class="nav-buttons" style="justify-content:flex-end">
-        <button class="btn-next" onclick="goTo('page-training')">Start →</button>
+        <button class="btn-next" onclick="startWithDetails()">Start →</button>
       </div>
     </div>
   </div>
@@ -162,6 +177,8 @@ const COMPLETION_CODES = { control:'CTRL-7823', shap:'SHAP-4419', lime:'LIME-903
 
 // Stimuli will be injected here by generate_stimuli.py (or loaded from stimuli.json)
 let STIMULI = [];  // populated after JSON load
+let PARTICIPANT_NAME = '';
+let PARTICIPANT_EMAIL = '';
 
 const responses = [];
 let currentQ = 0;
@@ -194,6 +211,20 @@ function shuffle(arr) {
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
+}
+
+function startWithDetails() {
+  const name = document.getElementById('participant-name').value.trim();
+  const email = document.getElementById('participant-email').value.trim();
+  const nameErr = document.getElementById('err-name');
+  const emailErr = document.getElementById('err-email');
+  let valid = true;
+  if (!name) { nameErr.style.display = 'block'; valid = false; } else nameErr.style.display = 'none';
+  if (!email || !email.includes('@')) { emailErr.style.display = 'block'; valid = false; } else emailErr.style.display = 'none';
+  if (!valid) return;
+  PARTICIPANT_NAME = name;
+  PARTICIPANT_EMAIL = email;
+  goTo('page-training');
 }
 
 function goTo(pageId) {
@@ -387,7 +418,8 @@ function nextQ(idx) {
     q: idx + 1,
     stimulus_id: s.id,
     condition: CONDITION,
-    prolific_pid: PROLIFIC_PID,
+    participant_name: PARTICIPANT_NAME,
+    participant_email: PARTICIPANT_EMAIL,
     prediction: parseInt(pred.value),
     ground_truth: s.label,
     task_correct: correct,

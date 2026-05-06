@@ -1,0 +1,562 @@
+[
+  {
+    "id": 1,
+    "label": 1,
+    "label_text": ">50K",
+    "model_confidence": 0.898,
+    "features": {
+      "age": 38,
+      "education": "Doctorate",
+      "marital_status": "Married-civ-spouse",
+      "relationship": "Wife",
+      "hours_per_week": 40,
+      "capital_gain": 7688
+    },
+    "shap_top1_ground_truth": "capital-gain",
+    "shap_top3_ground_truth": [
+      "capital-gain",
+      "education-num",
+      "marital-status"
+    ],
+    "shap_bars": {
+      "capital-gain": 0.4604,
+      "education-num": 0.1027,
+      "marital-status": 0.0802,
+      "age": 0.0316,
+      "native-country": -0.0187,
+      "sex": -0.0173
+    }
+  },
+  {
+    "id": 2,
+    "label": 1,
+    "label_text": ">50K",
+    "model_confidence": 0.975,
+    "features": {
+      "age": 41,
+      "education": "Masters",
+      "marital_status": "Married-civ-spouse",
+      "relationship": "Husband",
+      "hours_per_week": 55,
+      "capital_gain": 7688
+    },
+    "shap_top1_ground_truth": "capital-gain",
+    "shap_top3_ground_truth": [
+      "capital-gain",
+      "education-num",
+      "marital-status"
+    ],
+    "shap_bars": {
+      "capital-gain": 0.4354,
+      "education-num": 0.0785,
+      "marital-status": 0.0784,
+      "relationship": 0.0694,
+      "age": 0.0339,
+      "hours-per-week": 0.0312
+    }
+  },
+  {
+    "id": 3,
+    "label": 1,
+    "label_text": ">50K",
+    "model_confidence": 0.955,
+    "features": {
+      "age": 37,
+      "education": "Masters",
+      "marital_status": "Married-civ-spouse",
+      "relationship": "Husband",
+      "hours_per_week": 50,
+      "capital_gain": 7298
+    },
+    "shap_top1_ground_truth": "capital-gain",
+    "shap_top3_ground_truth": [
+      "capital-gain",
+      "education-num",
+      "marital-status"
+    ],
+    "shap_bars": {
+      "capital-gain": 0.4299,
+      "education-num": 0.0826,
+      "marital-status": 0.0774,
+      "relationship": 0.0701,
+      "hours-per-week": 0.0336,
+      "age": 0.025
+    }
+  },
+  {
+    "id": 4,
+    "label": 1,
+    "label_text": ">50K",
+    "model_confidence": 0.969,
+    "features": {
+      "age": 36,
+      "education": "Prof-school",
+      "marital_status": "Never-married",
+      "relationship": "Not-in-family",
+      "hours_per_week": 45,
+      "capital_gain": 10520
+    },
+    "shap_top1_ground_truth": "capital-gain",
+    "shap_top3_ground_truth": [
+      "capital-gain",
+      "education-num",
+      "marital-status"
+    ],
+    "shap_bars": {
+      "capital-gain": 0.6351,
+      "education-num": 0.083,
+      "marital-status": -0.0428,
+      "relationship": -0.0387,
+      "hours-per-week": 0.0307,
+      "age": 0.0295
+    }
+  },
+  {
+    "id": 5,
+    "label": 1,
+    "label_text": ">50K",
+    "model_confidence": 0.97,
+    "features": {
+      "age": 37,
+      "education": "Assoc-acdm",
+      "marital_status": "Married-civ-spouse",
+      "relationship": "Husband",
+      "hours_per_week": 45,
+      "capital_gain": 15024
+    },
+    "shap_top1_ground_truth": "capital-gain",
+    "shap_top3_ground_truth": [
+      "capital-gain",
+      "relationship",
+      "marital-status"
+    ],
+    "shap_bars": {
+      "capital-gain": 0.5569,
+      "relationship": 0.0636,
+      "marital-status": 0.0424,
+      "age": 0.0292,
+      "hours-per-week": 0.0214,
+      "occupation": 0.0122
+    }
+  },
+  {
+    "id": 6,
+    "label": 1,
+    "label_text": ">50K",
+    "model_confidence": 0.977,
+    "features": {
+      "age": 60,
+      "education": "Masters",
+      "marital_status": "Married-civ-spouse",
+      "relationship": "Husband",
+      "hours_per_week": 40,
+      "capital_gain": 7298
+    },
+    "shap_top1_ground_truth": "capital-gain",
+    "shap_top3_ground_truth": [
+      "capital-gain",
+      "relationship",
+      "education-num"
+    ],
+    "shap_bars": {
+      "capital-gain": 0.4336,
+      "relationship": 0.0826,
+      "education-num": 0.08,
+      "marital-status": 0.0774,
+      "age": 0.0274,
+      "occupation": 0.0189
+    }
+  },
+  {
+    "id": 7,
+    "label": 1,
+    "label_text": ">50K",
+    "model_confidence": 0.753,
+    "features": {
+      "age": 52,
+      "education": "Masters",
+      "marital_status": "Married-civ-spouse",
+      "relationship": "Husband",
+      "hours_per_week": 50,
+      "capital_gain": 0
+    },
+    "shap_top1_ground_truth": "education-num",
+    "shap_top3_ground_truth": [
+      "education-num",
+      "relationship",
+      "marital-status"
+    ],
+    "shap_bars": {
+      "education-num": 0.157,
+      "relationship": 0.1272,
+      "marital-status": 0.0832,
+      "age": 0.061,
+      "hours-per-week": 0.0593,
+      "capital-gain": -0.0273
+    }
+  },
+  {
+    "id": 8,
+    "label": 1,
+    "label_text": ">50K",
+    "model_confidence": 0.974,
+    "features": {
+      "age": 32,
+      "education": "Doctorate",
+      "marital_status": "Married-civ-spouse",
+      "relationship": "Husband",
+      "hours_per_week": 45,
+      "capital_gain": 7688
+    },
+    "shap_top1_ground_truth": "capital-gain",
+    "shap_top3_ground_truth": [
+      "capital-gain",
+      "education-num",
+      "marital-status"
+    ],
+    "shap_bars": {
+      "capital-gain": 0.4598,
+      "education-num": 0.1126,
+      "marital-status": 0.0608,
+      "relationship": 0.0566,
+      "hours-per-week": 0.0238,
+      "occupation": 0.0179
+    }
+  },
+  {
+    "id": 9,
+    "label": 1,
+    "label_text": ">50K",
+    "model_confidence": 0.98,
+    "features": {
+      "age": 47,
+      "education": "Bachelors",
+      "marital_status": "Married-civ-spouse",
+      "relationship": "Husband",
+      "hours_per_week": 40,
+      "capital_gain": 15024
+    },
+    "shap_top1_ground_truth": "capital-gain",
+    "shap_top3_ground_truth": [
+      "capital-gain",
+      "relationship",
+      "marital-status"
+    ],
+    "shap_bars": {
+      "capital-gain": 0.5494,
+      "relationship": 0.0673,
+      "marital-status": 0.0482,
+      "age": 0.04,
+      "education-num": 0.0118,
+      "occupation": 0.0092
+    }
+  },
+  {
+    "id": 10,
+    "label": 1,
+    "label_text": ">50K",
+    "model_confidence": 0.92,
+    "features": {
+      "age": 42,
+      "education": "Some-college",
+      "marital_status": "Married-civ-spouse",
+      "relationship": "Husband",
+      "hours_per_week": 50,
+      "capital_gain": 5178
+    },
+    "shap_top1_ground_truth": "capital-gain",
+    "shap_top3_ground_truth": [
+      "capital-gain",
+      "relationship",
+      "marital-status"
+    ],
+    "shap_bars": {
+      "capital-gain": 0.422,
+      "relationship": 0.1306,
+      "marital-status": 0.0818,
+      "education-num": -0.0473,
+      "age": 0.0401,
+      "sex": 0.0229
+    }
+  },
+  {
+    "id": 11,
+    "label": 0,
+    "label_text": "<=50K",
+    "model_confidence": 0.009,
+    "features": {
+      "age": 26,
+      "education": "Assoc-voc",
+      "marital_status": "Never-married",
+      "relationship": "Not-in-family",
+      "hours_per_week": 38,
+      "capital_gain": 0
+    },
+    "shap_top1_ground_truth": "relationship",
+    "shap_top3_ground_truth": [
+      "relationship",
+      "marital-status",
+      "age"
+    ],
+    "shap_bars": {
+      "relationship": -0.0754,
+      "marital-status": -0.0516,
+      "age": -0.0502,
+      "capital-gain": -0.0222,
+      "education-num": -0.0168,
+      "hours-per-week": -0.0129
+    }
+  },
+  {
+    "id": 12,
+    "label": 0,
+    "label_text": "<=50K",
+    "model_confidence": 0.091,
+    "features": {
+      "age": 50,
+      "education": "9th",
+      "marital_status": "Married-civ-spouse",
+      "relationship": "Husband",
+      "hours_per_week": 40,
+      "capital_gain": 0
+    },
+    "shap_top1_ground_truth": "education-num",
+    "shap_top3_ground_truth": [
+      "education-num",
+      "education",
+      "relationship"
+    ],
+    "shap_bars": {
+      "education-num": -0.1222,
+      "education": -0.1045,
+      "relationship": 0.0576,
+      "marital-status": 0.0433,
+      "age": 0.0327,
+      "capital-gain": -0.0327
+    }
+  },
+  {
+    "id": 13,
+    "label": 0,
+    "label_text": "<=50K",
+    "model_confidence": 0.051,
+    "features": {
+      "age": 26,
+      "education": "Assoc-voc",
+      "marital_status": "Never-married",
+      "relationship": "Not-in-family",
+      "hours_per_week": 50,
+      "capital_gain": 0
+    },
+    "shap_top1_ground_truth": "relationship",
+    "shap_top3_ground_truth": [
+      "relationship",
+      "marital-status",
+      "age"
+    ],
+    "shap_bars": {
+      "relationship": -0.0775,
+      "marital-status": -0.0581,
+      "age": -0.0566,
+      "hours-per-week": 0.0366,
+      "education-num": -0.032,
+      "capital-gain": -0.0246
+    }
+  },
+  {
+    "id": 14,
+    "label": 0,
+    "label_text": "<=50K",
+    "model_confidence": 0.002,
+    "features": {
+      "age": 20,
+      "education": "Assoc-voc",
+      "marital_status": "Never-married",
+      "relationship": "Own-child",
+      "hours_per_week": 20,
+      "capital_gain": 0
+    },
+    "shap_top1_ground_truth": "relationship",
+    "shap_top3_ground_truth": [
+      "relationship",
+      "age",
+      "marital-status"
+    ],
+    "shap_bars": {
+      "relationship": -0.0759,
+      "age": -0.0577,
+      "marital-status": -0.0455,
+      "hours-per-week": -0.0245,
+      "capital-gain": -0.0201,
+      "education-num": -0.0179
+    }
+  },
+  {
+    "id": 15,
+    "label": 0,
+    "label_text": "<=50K",
+    "model_confidence": 0.134,
+    "features": {
+      "age": 46,
+      "education": "Bachelors",
+      "marital_status": "Never-married",
+      "relationship": "Not-in-family",
+      "hours_per_week": 56,
+      "capital_gain": 0
+    },
+    "shap_top1_ground_truth": "relationship",
+    "shap_top3_ground_truth": [
+      "relationship",
+      "marital-status",
+      "hours-per-week"
+    ],
+    "shap_bars": {
+      "relationship": -0.1165,
+      "marital-status": -0.0736,
+      "hours-per-week": 0.052,
+      "age": 0.0456,
+      "capital-gain": -0.0285,
+      "occupation": 0.02
+    }
+  },
+  {
+    "id": 16,
+    "label": 0,
+    "label_text": "<=50K",
+    "model_confidence": 0.002,
+    "features": {
+      "age": 20,
+      "education": "Assoc-voc",
+      "marital_status": "Never-married",
+      "relationship": "Own-child",
+      "hours_per_week": 14,
+      "capital_gain": 0
+    },
+    "shap_top1_ground_truth": "relationship",
+    "shap_top3_ground_truth": [
+      "relationship",
+      "age",
+      "marital-status"
+    ],
+    "shap_bars": {
+      "relationship": -0.0741,
+      "age": -0.0551,
+      "marital-status": -0.0431,
+      "hours-per-week": -0.0262,
+      "capital-gain": -0.0199,
+      "education-num": -0.0192
+    }
+  },
+  {
+    "id": 17,
+    "label": 0,
+    "label_text": "<=50K",
+    "model_confidence": 0.182,
+    "features": {
+      "age": 33,
+      "education": "Some-college",
+      "marital_status": "Married-civ-spouse",
+      "relationship": "Husband",
+      "hours_per_week": 40,
+      "capital_gain": 0
+    },
+    "shap_top1_ground_truth": "relationship",
+    "shap_top3_ground_truth": [
+      "relationship",
+      "education-num",
+      "marital-status"
+    ],
+    "shap_bars": {
+      "relationship": 0.073,
+      "education-num": -0.071,
+      "marital-status": 0.0524,
+      "capital-gain": -0.0329,
+      "age": -0.0295,
+      "occupation": -0.0293
+    }
+  },
+  {
+    "id": 18,
+    "label": 0,
+    "label_text": "<=50K",
+    "model_confidence": 0.003,
+    "features": {
+      "age": 23,
+      "education": "11th",
+      "marital_status": "Never-married",
+      "relationship": "Not-in-family",
+      "hours_per_week": 40,
+      "capital_gain": 0
+    },
+    "shap_top1_ground_truth": "age",
+    "shap_top3_ground_truth": [
+      "age",
+      "relationship",
+      "marital-status"
+    ],
+    "shap_bars": {
+      "age": -0.0505,
+      "relationship": -0.0467,
+      "marital-status": -0.0393,
+      "education-num": -0.0387,
+      "education": -0.0237,
+      "capital-gain": -0.0222
+    }
+  },
+  {
+    "id": 19,
+    "label": 0,
+    "label_text": "<=50K",
+    "model_confidence": 0.005,
+    "features": {
+      "age": 20,
+      "education": "Assoc-voc",
+      "marital_status": "Never-married",
+      "relationship": "Not-in-family",
+      "hours_per_week": 35,
+      "capital_gain": 0
+    },
+    "shap_top1_ground_truth": "relationship",
+    "shap_top3_ground_truth": [
+      "relationship",
+      "age",
+      "marital-status"
+    ],
+    "shap_bars": {
+      "relationship": -0.0697,
+      "age": -0.0613,
+      "marital-status": -0.0481,
+      "capital-gain": -0.0221,
+      "education-num": -0.0221,
+      "hours-per-week": -0.0142
+    }
+  },
+  {
+    "id": 20,
+    "label": 0,
+    "label_text": "<=50K",
+    "model_confidence": 0.009,
+    "features": {
+      "age": 36,
+      "education": "Some-college",
+      "marital_status": "Separated",
+      "relationship": "Unmarried",
+      "hours_per_week": 40,
+      "capital_gain": 0
+    },
+    "shap_top1_ground_truth": "relationship",
+    "shap_top3_ground_truth": [
+      "relationship",
+      "marital-status",
+      "education-num"
+    ],
+    "shap_bars": {
+      "relationship": -0.0914,
+      "marital-status": -0.0491,
+      "education-num": -0.0369,
+      "capital-gain": -0.0235,
+      "hours-per-week": -0.0134,
+      "age": 0.0115
+    }
+  }
+]

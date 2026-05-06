@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Income Prediction Study</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #f5f7fa; color: #222; }
+  .container { max-width: 800px; margin: 0 auto; padding: 24px; }
+  h1 { font-size: 1.5rem; margin-bottom: 8px; color: #1a1a2e; }
+  .subtitle { color: #555; margin-bottom: 24px; font-size: 0.95rem; }
+  .progress-bar { background: #ddd; border-radius: 8px; height: 10px; margin-bottom: 24px; }
+  .progress-fill { background: #4361ee; height: 10px; border-radius: 8px; transition: width 0.3s; }
+  .card { background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .card h2 { font-size: 1rem; color: #4361ee; margin-bottom: 16px; border-bottom: 2px solid #e8edff; padding-bottom: 8px; }
+  .profile-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+  .profile-table th { background: #e8edff; color: #1a1a2e; text-align: left; padding: 10px 14px; font-size: 0.9rem; }
+  .profile-table td { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; font-size: 0.95rem; }
+  .profile-table tr:last-child td { border-bottom: none; }
+  .explanation-section { background: #f8f9ff; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+  .explanation-section h3 { font-size: 0.9rem; color: #555; margin-bottom: 12px; }
+  .bar-row { display: flex; align-items: center; margin-bottom: 8px; gap: 10px; }
+  .bar-label { width: 140px; font-size: 0.85rem; text-align: right; color: #333; flex-shrink: 0; }
+  .bar-track { flex: 1; background: #e8e8e8; border-radius: 4px; height: 22px; position: relative; }
+  .bar-pos { background: #e63946; height: 22px; border-radius: 4px; position: absolute; left: 50%; }
+  .bar-neg { background: #457b9d; height: 22px; border-radius: 4px; position: absolute; right: 50%; }
+  .bar-value { width: 60px; font-size: 0.8rem; color: #666; flex-shrink: 0; }
+  .question-block { margin-bottom: 20px; }
+  .question-block label { display: block; font-weight: bold; margin-bottom: 10px; font-size: 0.95rem; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: border-color 0.2s; }
+  .option:hover { border-color: #4361ee; background: #f0f3ff; }
+  .option input[type=radio] { accent-color: #4361ee; width: 18px; height: 18px; }
+  .option.selected { border-color: #4361ee; background: #e8edff; }
+  select { width: 100%; padding: 10px 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 0.95rem; background: #fff; }
+  select:focus { outline: none; border-color: #4361ee; }
+  .confidence-row { display: flex; align-items: center; gap: 12px; }
+  .confidence-row input[type=range] { flex: 1; accent-color: #4361ee; }
+  .confidence-val { font-weight: bold; color: #4361ee; width: 48px; text-align: right; }
+  .nav-buttons { display: flex; justify-content: space-between; margin-top: 20px; }
+  button { padding: 12px 28px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
+  .btn-next { background: #4361ee; color: #fff; }
+  .btn-next:hover { background: #3451d1; }
+  .btn-prev { background: #e0e0e0; color: #333; }
+  .btn-prev:hover { background: #ccc; }
+  .page { display: none; }
+  .page.active { display: block; }
+  .intro-box { background: #fff; border-radius: 12px; padding: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .intro-box h1 { margin-bottom: 12px; }
+  .intro-box p { margin-bottom: 12px; line-height: 1.6; color: #444; }
+  .intro-box ul { margin-left: 20px; margin-bottom: 12px; color: #444; line-height: 1.8; }
+  .complete-box { text-align: center; padding: 40px; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .complete-box h2 { color: #4361ee; margin-bottom: 12px; }
+  .code-box { background: #e8edff; border-radius: 8px; padding: 16px; font-size: 1.1rem; font-weight: bold; letter-spacing: 2px; margin: 16px 0; color: #1a1a2e; }
+  .error-msg { color: #e63946; font-size: 0.85rem; margin-top: 4px; display: none; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- INTRO PAGE -->
+  <div class="page active" id="page-intro">
+    <div class="intro-box">
+      <h1>🧠 Income Prediction Study</h1>
+      <p><strong>Thank you for participating!</strong> This study takes approximately <strong>15–20 minutes</strong>.</p>
+      <p><strong>What you will do:</strong></p>
+      <ul>
+        <li>You will be shown profiles of 20 different people</li>
+        <li>Each profile includes details like age, education, occupation, and working hours</li>
+        <li>Your task: predict whether each person earns <strong>more than $50,000 per year</strong></li>
+        <li>After each prediction, you will be asked which feature you think was most important</li>
+      </ul>
+      <p><strong>There are no right or wrong answers</strong> — we are interested in how you reason with the information provided. Please answer honestly and don't overthink each question.</p>
+      <p style="margin-top:16px;color:#888;font-size:0.85rem;">Your responses are anonymous. Data is used for academic research only.</p>
+      <div class="nav-buttons" style="justify-content:flex-end">
+        <button class="btn-next" onclick="goTo('page-training')">Start →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRAINING PAGE -->
+  <div class="page" id="page-training">
+    <div class="card">
+      <h2>📖 Practice — Understanding the Profile</h2>
+      <p style="margin-bottom:16px;color:#444;line-height:1.6;">
+        Here is a sample profile. The table shows a person's background.
+        <span id="expl-instruction"></span>
+      </p>
+      <table class="profile-table">
+        <tr><th>Feature</th><th>Value</th><th>What it means</th></tr>
+        <tr><td>Age</td><td>34</td><td>Person's age in years</td></tr>
+        <tr><td>Education</td><td>Bachelors</td><td>Highest level of education completed</td></tr>
+        <tr><td>Marital Status</td><td>Married-civ-spouse</td><td>Married (civilian spouse)</td></tr>
+        <tr><td>Relationship</td><td>Husband</td><td>Role in family</td></tr>
+        <tr><td>Hours/Week</td><td>45</td><td>Hours worked per week</td></tr>
+        <tr><td>Capital Gain</td><td>$5,000</td><td>Investment income earned this year</td></tr>
+      </table>
+      <div id="training-explanation" class="explanation-section" style="display:none;">
+        <h3>📊 Model Explanation — feature importance bar chart</h3>
+        <p style="font-size:0.85rem;color:#555;margin-bottom:12px;">
+          Red bars = pushed the prediction <strong>toward &gt;$50K</strong>.
+          Blue bars = pushed the prediction <strong>toward ≤$50K</strong>. Longer bar = stronger effect.
+        </p>
+        <div class="bar-row">
+          <span class="bar-label">Capital Gain</span>
+          <div class="bar-track"><div class="bar-pos" style="width:60%"></div></div>
+          <span class="bar-value">+0.35</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Education</span>
+          <div class="bar-track"><div class="bar-pos" style="width:30%"></div></div>
+          <span class="bar-value">+0.12</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Hours/Week</span>
+          <div class="bar-track"><div class="bar-pos" style="width:15%"></div></div>
+          <span class="bar-value">+0.06</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Age</span>
+          <div class="bar-track"><div class="bar-neg" style="width:10%"></div></div>
+          <span class="bar-value">-0.04</span>
+        </div>
+      </div>
+      <p style="color:#555;font-size:0.9rem;">
+        This is just a practice example. Click <strong>Continue</strong> when you are ready to begin.
+      </p>
+      <div class="nav-buttons">
+        <button class="btn-prev" onclick="goTo('page-intro')">← Back</button>
+        <button class="btn-next" onclick="startQuestions()">Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUESTION PAGES (generated by JS) -->
+  <div id="questions-container"></div>
+
+  <!-- COMPLETE PAGE -->
+  <div class="page" id="page-complete">
+    <div class="complete-box">
+      <h2>✅ Study Complete!</h2>
+      <p>Thank you for completing all 20 questions.</p>
+      <p style="margin-top:12px;">Your completion code for Prolific is:</p>
+      <div class="code-box" id="completion-code">LOADING...</div>
+      <p style="color:#555;font-size:0.9rem;">Please copy this code and paste it back into Prolific to receive your payment.</p>
+      <p style="margin-top:20px;color:#888;font-size:0.8rem;">Your data has been recorded. You may now close this tab.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// CONFIGURATION — paste stimuli.json contents into STIMULI below
+// ─────────────────────────────────────────────────────────────────────────────
+const CONDITION = new URLSearchParams(window.location.search).get('cond') || 'control';
+// cond=control | cond=shap | cond=lime
+const PROLIFIC_PID = new URLSearchParams(window.location.search).get('PROLIFIC_PID') || 'local';
+const COMPLETION_CODES = { control:'CTRL-7823', shap:'SHAP-4419', lime:'LIME-9031' };
+
+// Stimuli will be injected here by generate_stimuli.py (or loaded from stimuli.json)
+let STIMULI = [];  // populated after JSON load
+
+const responses = [];
+let currentQ = 0;
+
+// ── Load stimuli then build UI ──────────────────────────────────────────────
+fetch('stimuli.json')
+  .then(r => r.json())
+  .then(data => {
+    STIMULI = shuffle(data);  // randomise order per participant
+    document.getElementById('completion-code').textContent =
+      COMPLETION_CODES[CONDITION] || 'DONE-0000';
+    // Set training instruction
+    const instrEl = document.getElementById('expl-instruction');
+    const trainExpl = document.getElementById('training-explanation');
+    if (CONDITION === 'shap') {
+      instrEl.textContent = 'Below the profile you will also see a SHAP explanation bar chart showing how each feature influenced the model\'s prediction.';
+      trainExpl.style.display = 'block';
+      trainExpl.querySelector('h3').textContent = '📊 SHAP Explanation';
+    } else if (CONDITION === 'lime') {
+      instrEl.textContent = 'Below the profile you will also see a LIME explanation bar chart showing how each feature influenced the model\'s prediction.';
+      trainExpl.style.display = 'block';
+      trainExpl.querySelector('h3').textContent = '📊 LIME Explanation';
+    } else {
+      instrEl.textContent = 'No additional information will be shown — rely on the profile alone.';
+    }
+  })
+  .catch(() => {
+    alert('Could not load stimuli.json. Make sure the file is in the same folder as survey.html and you are running this from a local server (not by double-clicking the file).');
+  });
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function goTo(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function startQuestions() {
+  buildQuestions();
+  showQuestion(0);
+}
+
+function featureLabel(key) {
+  const map = {
+    'age': 'Age', 'workclass': 'Work Class', 'education': 'Education',
+    'education-num': 'Education Level', 'marital-status': 'Marital Status',
+    'occupation': 'Occupation', 'relationship': 'Relationship', 'race': 'Race',
+    'sex': 'Sex', 'capital-gain': 'Capital Gain', 'capital-loss': 'Capital Loss',
+    'hours-per-week': 'Hours/Week', 'native-country': 'Native Country',
+    // decoded keys
+    'hours_per_week': 'Hours/Week', 'capital_gain': 'Capital Gain',
+    'marital_status': 'Marital Status'
+  };
+  return map[key] || key;
+}
+
+function buildQuestions() {
+  const container = document.getElementById('questions-container');
+  STIMULI.forEach((s, idx) => {
+    const div = document.createElement('div');
+    div.className = 'page';
+    div.id = `page-q${idx}`;
+
+    // Profile table rows
+    const feats = s.features;
+    const rows = Object.entries(feats).map(([k, v]) => {
+      const displayVal = k === 'capital_gain' ? `$${v.toLocaleString()}` : v;
+      return `<tr><td><strong>${featureLabel(k)}</strong></td><td>${displayVal}</td></tr>`;
+    }).join('');
+
+    // SHAP bar chart (only for shap/lime conditions)
+    let explHtml = '';
+    if ((CONDITION === 'shap' || CONDITION === 'lime') && s.shap_bars) {
+      const MAX_VAL = Math.max(...Object.values(s.shap_bars).map(Math.abs));
+      const barRows = Object.entries(s.shap_bars).map(([feat, val]) => {
+        const pct = Math.round((Math.abs(val) / MAX_VAL) * 48);
+        const direction = val >= 0 ? 'pos' : 'neg';
+        return `<div class="bar-row">
+          <span class="bar-label">${featureLabel(feat)}</span>
+          <div class="bar-track"><div class="bar-${direction}" style="width:${pct}%"></div></div>
+          <span class="bar-value">${val >= 0 ? '+' : ''}${val.toFixed(3)}</span>
+        </div>`;
+      }).join('');
+      const condName = CONDITION === 'shap' ? 'SHAP' : 'LIME';
+      explHtml = `<div class="explanation-section">
+        <h3>📊 ${condName} Explanation — How each feature influenced the prediction</h3>
+        <p style="font-size:0.85rem;color:#555;margin-bottom:12px;">
+          <span style="color:#e63946">■</span> Red = pushed toward &gt;$50K &nbsp;
+          <span style="color:#457b9d">■</span> Blue = pushed toward ≤$50K. Longer bar = stronger effect.
+        </p>
+        ${barRows}
+      </div>`;
+    }
+
+    // Causal feature options (all decoded feature names)
+    const causalOptions = Object.keys(feats).map(k =>
+      `<option value="${k}">${featureLabel(k)}</option>`
+    ).join('');
+
+    div.innerHTML = `
+      <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(((idx+1)/STIMULI.length)*100)}%"></div></div>
+      <div class="card">
+        <h2>Person ${idx + 1} of ${STIMULI.length}</h2>
+        <table class="profile-table">
+          <tr><th>Feature</th><th>Value</th></tr>
+          ${rows}
+        </table>
+        ${explHtml}
+
+        <div class="question-block">
+          <label>Q1. Does this person earn <strong>more than $50,000/year</strong>?</label>
+          <div class="options">
+            <label class="option"><input type="radio" name="q${idx}_pred" value="1"> Yes — earns <strong>&gt;$50K</strong></label>
+            <label class="option"><input type="radio" name="q${idx}_pred" value="0"> No — earns <strong>≤$50K</strong></label>
+          </div>
+          <p class="error-msg" id="err-q${idx}-pred">Please select an answer.</p>
+        </div>
+
+        <div class="question-block">
+          <label>Q2. Which feature do you think was <strong>most important</strong> in determining this person's income?</label>
+          <select id="q${idx}_causal">
+            <option value="">-- Select a feature --</option>
+            ${causalOptions}
+          </select>
+          <p class="error-msg" id="err-q${idx}-causal">Please select a feature.</p>
+        </div>
+
+        <div class="question-block">
+          <label>Q3. How <strong>confident</strong> are you in your prediction?</label>
+          <div class="confidence-row">
+            <span>0%</span>
+            <input type="range" id="q${idx}_conf" min="0" max="100" value="50"
+              oninput="document.getElementById('conf-val-${idx}').textContent=this.value+'%'">
+            <span>100%</span>
+            <span class="confidence-val" id="conf-val-${idx}">50%</span>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button class="btn-prev" onclick="prevQ(${idx})">← Back</button>
+          <button class="btn-next" onclick="nextQ(${idx})">
+            ${idx < STIMULI.length - 1 ? 'Next →' : 'Finish ✓'}
+          </button>
+        </div>
+      </div>`;
+
+    container.appendChild(div);
+  });
+}
+
+function showQuestion(idx) {
+  goTo(`page-q${idx}`);
+  currentQ = idx;
+}
+
+function prevQ(idx) {
+  if (idx === 0) goTo('page-training');
+  else showQuestion(idx - 1);
+}
+
+function nextQ(idx) {
+  const pred = document.querySelector(`input[name="q${idx}_pred"]:checked`);
+  const causal = document.getElementById(`q${idx}_causal`).value;
+  const predErr = document.getElementById(`err-q${idx}-pred`);
+  const causalErr = document.getElementById(`err-q${idx}-causal`);
+  let valid = true;
+  if (!pred) { predErr.style.display = 'block'; valid = false; } else predErr.style.display = 'none';
+  if (!causal) { causalErr.style.display = 'block'; valid = false; } else causalErr.style.display = 'none';
+  if (!valid) return;
+
+  const conf = parseInt(document.getElementById(`q${idx}_conf`).value);
+  const s = STIMULI[idx];
+  const correct = parseInt(pred.value) === s.label ? 1 : 0;
+  const causal_correct = (causal === s.shap_top1_ground_truth || (s.shap_top3_ground_truth||[]).includes(causal)) ? 1 : 0;
+
+  responses.push({
+    q: idx + 1,
+    stimulus_id: s.id,
+    condition: CONDITION,
+    prolific_pid: PROLIFIC_PID,
+    prediction: parseInt(pred.value),
+    ground_truth: s.label,
+    task_correct: correct,
+    chosen_feature: causal,
+    shap_top1: s.shap_top1_ground_truth,
+    causal_correct,
+    confidence: conf,
+  });
+
+  if (idx < STIMULI.length - 1) {
+    showQuestion(idx + 1);
+  } else {
+    saveAndFinish();
+  }
+}
+
+function saveAndFinish() {
+  // Summary stats
+  const taskAcc = (responses.reduce((s, r) => s + r.task_correct, 0) / responses.length * 100).toFixed(1);
+  const causalAcc = (responses.reduce((s, r) => s + r.causal_correct, 0) / responses.length * 100).toFixed(1);
+  console.log(`Condition: ${CONDITION} | Task Acc: ${taskAcc}% | Causal Acc: ${causalAcc}%`);
+  console.log('Full responses:', JSON.stringify(responses, null, 2));
+
+  // Download CSV
+  const headers = Object.keys(responses[0]).join(',');
+  const rows = responses.map(r => Object.values(r).join(','));
+  const csv = [headers, ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `responses_${CONDITION}_${PROLIFIC_PID}_${Date.now()}.csv`;
+  a.click();
+
+  goTo('page-complete');
+}
+</script>
+</body>
+</html>

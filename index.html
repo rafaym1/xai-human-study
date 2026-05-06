@@ -152,8 +152,9 @@
 
 <script>
 // ─────────────────────────────────────────────────────────────────────────────
-// CONFIGURATION — paste stimuli.json contents into STIMULI below
+// CONFIGURATION
 // ─────────────────────────────────────────────────────────────────────────────
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwgrzl_nGi5C-0a_EMT9kCe8fu2AC493gr_NVH6_LlIRBkbVgokeCOcBRqmTeJGrZJDWA/exec';
 const CONDITION = new URLSearchParams(window.location.search).get('cond') || 'control';
 // cond=control | cond=shap | cond=lime
 const PROLIFIC_PID = new URLSearchParams(window.location.search).get('PROLIFIC_PID') || 'local';
@@ -366,23 +367,22 @@ function nextQ(idx) {
 }
 
 function saveAndFinish() {
-  // Summary stats
-  const taskAcc = (responses.reduce((s, r) => s + r.task_correct, 0) / responses.length * 100).toFixed(1);
-  const causalAcc = (responses.reduce((s, r) => s + r.causal_correct, 0) / responses.length * 100).toFixed(1);
-  console.log(`Condition: ${CONDITION} | Task Acc: ${taskAcc}% | Causal Acc: ${causalAcc}%`);
-  console.log('Full responses:', JSON.stringify(responses, null, 2));
-
-  // Download CSV
-  const headers = Object.keys(responses[0]).join(',');
-  const rows = responses.map(r => Object.values(r).join(','));
-  const csv = [headers, ...rows].join('\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `responses_${CONDITION}_${PROLIFIC_PID}_${Date.now()}.csv`;
-  a.click();
-
   goTo('page-complete');
+  document.getElementById('completion-code').textContent = 'Saving...';
+
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(responses),
+  })
+  .then(() => {
+    document.getElementById('completion-code').textContent =
+      COMPLETION_CODES[CONDITION] || 'DONE-0000';
+  })
+  .catch(() => {
+    document.getElementById('completion-code').textContent = 'ERROR — please screenshot this page and send to the researcher.';
+  });
 }
 </script>
 </body>

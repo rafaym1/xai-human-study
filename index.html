@@ -88,39 +88,41 @@
         <span id="expl-instruction"></span>
       </p>
       <table class="profile-table">
-        <tr><th>Feature</th><th>Value</th><th>What it means</th></tr>
-        <tr><td>Age</td><td>34</td><td>Person's age in years</td></tr>
-        <tr><td>Education</td><td>Bachelors</td><td>Highest level of education completed</td></tr>
-        <tr><td>Marital Status</td><td>Married-civ-spouse</td><td>Married (civilian spouse)</td></tr>
-        <tr><td>Relationship</td><td>Husband</td><td>Role in family</td></tr>
-        <tr><td>Hours/Week</td><td>45</td><td>Hours worked per week</td></tr>
-        <tr><td>Capital Gain</td><td>$5,000</td><td>Investment income earned this year</td></tr>
+        <tr><th>Detail</th><th>Value</th><th>Plain English</th></tr>
+        <tr><td>Age</td><td>34</td><td>34 years old</td></tr>
+        <tr><td>Education</td><td>Bachelors</td><td>Has a university degree</td></tr>
+        <tr><td>Marital Status</td><td>Married</td><td>Currently married</td></tr>
+        <tr><td>Relationship</td><td>Husband</td><td>The husband/main earner in the household</td></tr>
+        <tr><td>Hours per Week</td><td>45</td><td>Works 45 hours per week</td></tr>
+        <tr><td>Investment Income</td><td>$5,000</td><td>Earned $5,000 this year from investments (e.g. selling stocks or property)</td></tr>
       </table>
       <div id="training-explanation" class="explanation-section" style="display:none;">
-        <h3>📊 Model Explanation — feature importance bar chart</h3>
-        <p style="font-size:0.85rem;color:#555;margin-bottom:12px;">
-          Red bars = pushed the prediction <strong>toward &gt;$50K</strong>.
-          Blue bars = pushed the prediction <strong>toward ≤$50K</strong>. Longer bar = stronger effect.
+        <h3>💡 How the computer model made its decision</h3>
+        <p style="font-size:0.9rem;color:#444;margin-bottom:12px;line-height:1.6;">
+          The chart below shows which details the computer model focused on most when making its prediction.<br><br>
+          <span style="color:#e63946;font-weight:bold;">■ Red bar</span> = this detail pushed the prediction toward <strong>earning more than $50K</strong><br>
+          <span style="color:#457b9d;font-weight:bold;">■ Blue bar</span> = this detail pushed the prediction toward <strong>earning $50K or less</strong><br>
+          The <strong>longer the bar</strong>, the more important that detail was.
         </p>
         <div class="bar-row">
-          <span class="bar-label">Capital Gain</span>
+          <span class="bar-label">Investment Income</span>
           <div class="bar-track"><div class="bar-pos" style="width:60%"></div></div>
-          <span class="bar-value">+0.35</span>
+          <span class="bar-value"></span>
         </div>
         <div class="bar-row">
           <span class="bar-label">Education</span>
           <div class="bar-track"><div class="bar-pos" style="width:30%"></div></div>
-          <span class="bar-value">+0.12</span>
+          <span class="bar-value"></span>
         </div>
         <div class="bar-row">
-          <span class="bar-label">Hours/Week</span>
+          <span class="bar-label">Hours per Week</span>
           <div class="bar-track"><div class="bar-pos" style="width:15%"></div></div>
-          <span class="bar-value">+0.06</span>
+          <span class="bar-value"></span>
         </div>
         <div class="bar-row">
           <span class="bar-label">Age</span>
           <div class="bar-track"><div class="bar-neg" style="width:10%"></div></div>
-          <span class="bar-value">-0.04</span>
+          <span class="bar-value"></span>
         </div>
       </div>
       <p style="color:#555;font-size:0.9rem;">
@@ -140,11 +142,9 @@
   <div class="page" id="page-complete">
     <div class="complete-box">
       <h2>✅ Study Complete!</h2>
-      <p>Thank you for completing all 20 questions.</p>
-      <p style="margin-top:12px;">Your completion code for Prolific is:</p>
-      <div class="code-box" id="completion-code">LOADING...</div>
-      <p style="color:#555;font-size:0.9rem;">Please copy this code and paste it back into Prolific to receive your payment.</p>
-      <p style="margin-top:20px;color:#888;font-size:0.8rem;">Your data has been recorded. You may now close this tab.</p>
+      <p>Thank you so much for participating! Your responses have been recorded.</p>
+      <div class="code-box" id="completion-code">Saving your responses...</div>
+      <p style="margin-top:20px;color:#888;font-size:0.8rem;">You may now close this tab.</p>
     </div>
   </div>
 
@@ -176,16 +176,11 @@ fetch('stimuli.json')
     // Set training instruction
     const instrEl = document.getElementById('expl-instruction');
     const trainExpl = document.getElementById('training-explanation');
-    if (CONDITION === 'shap') {
-      instrEl.textContent = 'Below the profile you will also see a SHAP explanation bar chart showing how each feature influenced the model\'s prediction.';
+    if (CONDITION === 'shap' || CONDITION === 'lime') {
+      instrEl.textContent = 'Below each profile you will also see a chart showing which details the computer model focused on most when making its prediction.';
       trainExpl.style.display = 'block';
-      trainExpl.querySelector('h3').textContent = '📊 SHAP Explanation';
-    } else if (CONDITION === 'lime') {
-      instrEl.textContent = 'Below the profile you will also see a LIME explanation bar chart showing how each feature influenced the model\'s prediction.';
-      trainExpl.style.display = 'block';
-      trainExpl.querySelector('h3').textContent = '📊 LIME Explanation';
     } else {
-      instrEl.textContent = 'No additional information will be shown — rely on the profile alone.';
+      instrEl.textContent = 'No extra information will be shown — use only the profile details to make your guess.';
     }
   })
   .catch(() => {
@@ -214,16 +209,57 @@ function startQuestions() {
 
 function featureLabel(key) {
   const map = {
-    'age': 'Age', 'workclass': 'Work Class', 'education': 'Education',
-    'education-num': 'Education Level', 'marital-status': 'Marital Status',
-    'occupation': 'Occupation', 'relationship': 'Relationship', 'race': 'Race',
-    'sex': 'Sex', 'capital-gain': 'Capital Gain', 'capital-loss': 'Capital Loss',
-    'hours-per-week': 'Hours/Week', 'native-country': 'Native Country',
-    // decoded keys
-    'hours_per_week': 'Hours/Week', 'capital_gain': 'Capital Gain',
-    'marital_status': 'Marital Status'
+    'age':           'Age',
+    'workclass':     'Employment Type',
+    'education':     'Education',
+    'education-num': 'Education Level',
+    'marital-status':'Marital Status',
+    'occupation':    'Occupation',
+    'relationship':  'Role in Household',
+    'race':          'Race',
+    'sex':           'Sex',
+    'capital-gain':  'Investment Income',
+    'capital-loss':  'Investment Loss',
+    'hours-per-week':'Hours per Week',
+    'native-country':'Country of Origin',
+    // decoded keys from stimuli.json
+    'hours_per_week':  'Hours per Week',
+    'capital_gain':    'Investment Income',
+    'marital_status':  'Marital Status',
   };
   return map[key] || key;
+}
+
+function featureDesc(key, val) {
+  if (key === 'capital_gain') return val === 0 ? 'No investment income this year' : `Earned $${val.toLocaleString()} from investments (e.g. stocks or property sales)`;
+  if (key === 'hours_per_week') return `Works ${val} hours per week`;
+  if (key === 'age') return `${val} years old`;
+  if (key === 'education') {
+    const eduMap = {
+      'Doctorate':'PhD / Doctorate','Masters':'Master\'s degree','Prof-school':'Professional degree (e.g. law, medicine)',
+      'Bachelors':'Bachelor\'s degree','Assoc-acdm':'Associate\'s degree (academic)','Assoc-voc':'Associate\'s degree (vocational/trade)',
+      'Some-college':'Some college, no degree','HS-grad':'High school graduate','11th':'11th grade','9th':'9th grade',
+      '7th-8th':'7th–8th grade','1st-4th':'Primary school'
+    };
+    return eduMap[val] || val;
+  }
+  if (key === 'marital_status') {
+    const mMap = {
+      'Married-civ-spouse':'Married','Never-married':'Single / never married',
+      'Divorced':'Divorced','Separated':'Separated','Widowed':'Widowed',
+      'Married-spouse-absent':'Married but spouse not present','Married-AF-spouse':'Married (armed forces spouse)'
+    };
+    return mMap[val] || val;
+  }
+  if (key === 'relationship') {
+    const rMap = {
+      'Husband':'Husband — main earner in household','Wife':'Wife — main earner in household',
+      'Not-in-family':'Lives alone or not with close family','Own-child':'Child living with parents',
+      'Unmarried':'Single, not married','Other-relative':'Other family member'
+    };
+    return rMap[val] || val;
+  }
+  return val;
 }
 
 function buildQuestions() {
@@ -237,7 +273,8 @@ function buildQuestions() {
     const feats = s.features;
     const rows = Object.entries(feats).map(([k, v]) => {
       const displayVal = k === 'capital_gain' ? `$${v.toLocaleString()}` : v;
-      return `<tr><td><strong>${featureLabel(k)}</strong></td><td>${displayVal}</td></tr>`;
+      const desc = featureDesc(k, v);
+      return `<tr><td><strong>${featureLabel(k)}</strong></td><td>${displayVal}</td><td style="color:#555;font-size:0.88rem;">${desc}</td></tr>`;
     }).join('');
 
     // SHAP bar chart (only for shap/lime conditions)
@@ -253,12 +290,13 @@ function buildQuestions() {
           <span class="bar-value">${val >= 0 ? '+' : ''}${val.toFixed(3)}</span>
         </div>`;
       }).join('');
-      const condName = CONDITION === 'shap' ? 'SHAP' : 'LIME';
       explHtml = `<div class="explanation-section">
-        <h3>📊 ${condName} Explanation — How each feature influenced the prediction</h3>
-        <p style="font-size:0.85rem;color:#555;margin-bottom:12px;">
-          <span style="color:#e63946">■</span> Red = pushed toward &gt;$50K &nbsp;
-          <span style="color:#457b9d">■</span> Blue = pushed toward ≤$50K. Longer bar = stronger effect.
+        <h3>💡 How the computer model made its decision</h3>
+        <p style="font-size:0.9rem;color:#444;margin-bottom:12px;line-height:1.6;">
+          The chart below shows which details the model focused on most.<br>
+          <span style="color:#e63946;font-weight:bold;">■ Red</span> = pushed toward earning <strong>more than $50K</strong> &nbsp;
+          <span style="color:#457b9d;font-weight:bold;">■ Blue</span> = pushed toward earning <strong>$50K or less</strong><br>
+          The <strong>longer the bar</strong>, the more that detail mattered.
         </p>
         ${barRows}
       </div>`;
@@ -274,7 +312,7 @@ function buildQuestions() {
       <div class="card">
         <h2>Person ${idx + 1} of ${STIMULI.length}</h2>
         <table class="profile-table">
-          <tr><th>Feature</th><th>Value</th></tr>
+          <tr><th>Detail</th><th>Value</th><th>What it means</th></tr>
           ${rows}
         </table>
         ${explHtml}
@@ -377,11 +415,10 @@ function saveAndFinish() {
     body: JSON.stringify(responses),
   })
   .then(() => {
-    document.getElementById('completion-code').textContent =
-      COMPLETION_CODES[CONDITION] || 'DONE-0000';
+    document.getElementById('completion-code').textContent = '✅ Your responses have been saved. Thank you!';
   })
   .catch(() => {
-    document.getElementById('completion-code').textContent = 'ERROR — please screenshot this page and send to the researcher.';
+    document.getElementById('completion-code').textContent = 'Something went wrong — please take a screenshot of this page and send it to the researcher.';
   });
 }
 </script>

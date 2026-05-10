@@ -333,9 +333,13 @@ function buildQuestions() {
       </div>`;
     }
 
-    // Causal feature options (all decoded feature names)
-    const causalOptions = Object.keys(feats).map(k =>
-      `<option value="${k}">${featureLabel(k)}</option>`
+    // Causal feature checkboxes (multi-select up to 3)
+    const causalCheckboxes = Object.keys(feats).map(k =>
+      `<label class="option" style="cursor:pointer;">
+        <input type="checkbox" name="q${idx}_causal" value="${k}"
+          onchange="enforceMax(this,'q${idx}_causal',3)">
+        ${featureLabel(k)}
+      </label>`
     ).join('');
 
     div.innerHTML = `
@@ -358,12 +362,11 @@ function buildQuestions() {
         </div>
 
         <div class="question-block">
-          <label>Q2. Which feature do you think was <strong>most important</strong> in determining this person's income?</label>
-          <select id="q${idx}_causal">
-            <option value="">-- Select a feature --</option>
-            ${causalOptions}
-          </select>
-          <p class="error-msg" id="err-q${idx}-causal">Please select a feature.</p>
+          <label>Q2. Which details do you think <strong>most influenced</strong> this person's income? <span style="font-weight:normal;color:#888;">(select up to 3)</span></label>
+          <div class="options" id="causal-group-${idx}">
+            ${causalCheckboxes}
+          </div>
+          <p class="error-msg" id="err-q${idx}-causal">Please select at least one option.</p>
         </div>
 
         <div class="question-block">
@@ -399,20 +402,33 @@ function prevQ(idx) {
   else showQuestion(idx - 1);
 }
 
+function enforceMax(cb, name, max) {
+  const checked = document.querySelectorAll(`input[name="${name}"]:checked`);
+  if (checked.length > max) cb.checked = false;
+}
+
 function nextQ(idx) {
   const pred = document.querySelector(`input[name="q${idx}_pred"]:checked`);
-  const causal = document.getElementById(`q${idx}_causal`).value;
+  const chosenBoxes = [...document.querySelectorAll(`input[name="q${idx}_causal"]:checked`)];
   const predErr = document.getElementById(`err-q${idx}-pred`);
   const causalErr = document.getElementById(`err-q${idx}-causal`);
   let valid = true;
   if (!pred) { predErr.style.display = 'block'; valid = false; } else predErr.style.display = 'none';
-  if (!causal) { causalErr.style.display = 'block'; valid = false; } else causalErr.style.display = 'none';
+  if (chosenBoxes.length === 0) { causalErr.style.display = 'block'; valid = false; } else causalErr.style.display = 'none';
   if (!valid) return;
 
+  const chosenFeatures = chosenBoxes.map(b => b.value);
   const conf = parseInt(document.getElementById(`q${idx}_conf`).value);
   const s = STIMULI[idx];
   const correct = parseInt(pred.value) === s.label ? 1 : 0;
-  const causal_correct = (causal === s.shap_top1_ground_truth || (s.shap_top3_ground_truth||[]).includes(causal)) ? 1 : 0;
+
+  // Jaccard similarity between chosen features and SHAP top 3
+  const shapTop3 = new Set(s.shap_top3_ground_truth || []);
+  const chosen = new Set(chosenFeatures);
+  const intersection = [...chosen].filter(f => shapTop3.has(f)).length;
+  const union = new Set([...chosen, ...shapTop3]).size;
+  const jaccard = union === 0 ? 0 : Math.round((intersection / union) * 1000) / 1000;
+  const causal_correct = intersection > 0 ? 1 : 0;  // 1 if any overlap with SHAP top 3
 
   responses.push({
     q: idx + 1,
@@ -423,9 +439,10 @@ function nextQ(idx) {
     prediction: parseInt(pred.value),
     ground_truth: s.label,
     task_correct: correct,
-    chosen_feature: causal,
-    shap_top1: s.shap_top1_ground_truth,
+    chosen_features: chosenFeatures.join('|'),  // pipe-separated for sheet
+    shap_top3: (s.shap_top3_ground_truth||[]).join('|'),
     causal_correct,
+    jaccard,
     confidence: conf,
   });
 

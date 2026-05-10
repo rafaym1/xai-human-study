@@ -159,7 +159,6 @@
       <h2>✅ Study Complete!</h2>
       <p>Thank you so much for participating!</p>
       <div class="code-box" id="completion-code">⏳ Saving your responses, please wait...</div>
-      <p id="close-msg" style="margin-top:20px;color:#888;font-size:0.8rem;display:none;">You may now close this tab.</p>
     </div>
   </div>
 
@@ -465,11 +464,9 @@ function saveAndFinish() {
   })
   .then(() => {
     document.getElementById('completion-code').textContent = '✅ Your responses have been saved!';
-    document.getElementById('close-msg').style.display = 'block';
   })
   .catch(() => {
     document.getElementById('completion-code').textContent = '⚠️ Something went wrong — please screenshot this page and send it to the researcher.';
-    document.getElementById('close-msg').style.display = 'block';
   });
 }
 </script>
